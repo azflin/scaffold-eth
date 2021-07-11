@@ -23,11 +23,11 @@ contract Vendor is Ownable {
   }
 
   //ToDo: create a sellTokens() function:
-  // function sellTokens(uint256 _tokensToSell) external {
-  //   yourToken.transfer(address(this), _tokensToSell);
-  //   (bool success,) = msg.sender.call{value: _tokensToSell / tokensPerEth}("");
-  //   require(success, "Failed to send ether.");
-  // }
+  function sellTokens(uint256 _tokensToSell) external {
+    yourToken.transferFrom(msg.sender, address(this), _tokensToSell);
+    (bool success,) = msg.sender.call{value: _tokensToSell / tokensPerEth}("");
+    require(success, "Failed to send ether.");
+  }
 
   //ToDo: create a withdraw() function that lets the owner, you can 
   //use the Ownable.sol import above:

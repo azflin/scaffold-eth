@@ -223,6 +223,7 @@ function App(props) {
 
   const [ buying, setBuying ] = useState()
   const [approving, setApproving ] = useState()
+  const [selling, setSelling] = useState()
 
   let transferDisplay = ""
   if(yourTokenBalance){
@@ -260,7 +261,11 @@ function App(props) {
 
   let sellButton = "";
   if (allowance && !allowance.isZero()) {
-    sellButton = <Button type={"primary"}>Sell</Button>;
+    sellButton = <Button type={"primary"} loading={selling} onClick={async ()=>{
+      setSelling(true)
+      await tx(writeContracts.Vendor.sellTokens(parseEther(tokenSellAmount)))
+      setSelling(false)
+    }}>Sell</Button>;
   } else {
     sellButton = <Button type={"primary"} loading={approving} onClick={async ()=>{
       setApproving(true)
