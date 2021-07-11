@@ -37,7 +37,7 @@ const humanizeDuration = require("humanize-duration");
 const targetNetwork = NETWORKS['localhost']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
-const DEBUG = true
+const DEBUG = false;
 
 // 🛰 providers
 if(DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
@@ -125,6 +125,8 @@ function App(props) {
   const tokensPerEth = useContractReader(readContracts, "Vendor", "tokensPerEth")
   console.log("🏦 tokensPerEth:", tokensPerEth ? tokensPerEth.toString() : '...')
 
+  const allowance = useContractReader(readContracts, "YourToken", "allowance", [address, vendorAddress])
+  console.log("🏵 yourAllowance:", allowance ? formatEther(allowance) : '...')
 
   // const complete = useContractReader(readContracts,"ExampleExternalContract", "completed")
   // console.log("✅ complete:",complete)
@@ -211,6 +213,7 @@ function App(props) {
   console.log("📟 buyTokensEvents:",buyTokensEvents)
 
   const [ tokenBuyAmount, setTokenBuyAmount ] = useState()
+  const [ tokenSellAmount, setTokenSellAmount ] = useState()
 
   const ethCostToPurchaseTokens = tokenBuyAmount && tokensPerEth &&  parseEther(""+(tokenBuyAmount / parseFloat(tokensPerEth)))
   console.log("ethCostToPurchaseTokens:",ethCostToPurchaseTokens)
@@ -252,6 +255,17 @@ function App(props) {
         </Card>
       </div>
     )
+  }
+
+  let sellButton = "";
+  if (allowance && !allowance.isZero()) {
+    sellButton = <Button type={"primary"}>Non zero allowance</Button>;
+  } else {
+    sellButton = <Button type={"primary"} onClick={async ()=>{
+      await tx(writeContracts.YourToken.approve(vendorAddress, parseEther("1000")))
+    }}>
+      Approve
+      </Button>;
   }
 
   return (
@@ -315,16 +329,22 @@ function App(props) {
 
             </Card>
           </div>
-
-
-
-
-
-
-
-
-
-
+          <Divider/>
+          <div style={{padding:8, marginTop: 32 ,width: 300, margin:"auto" }}>
+            <Card title="Sell Tokens">
+              <div style={{padding:8}}>
+                <Input
+                  style={{textAlign:"center"}}
+                  placeholder={"amount of tokens to sell"}
+                  value={tokenSellAmount}
+                  onChange={(e)=>{setTokenSellAmount(e.target.value)}}
+                />
+              </div>
+              <div style={{padding:8}}>
+                {sellButton}
+              </div>
+            </Card>
+          </div>
           <div style={{padding:8, marginTop: 32}}>
             <div>Vendor Token Balance:</div>
             <Balance
