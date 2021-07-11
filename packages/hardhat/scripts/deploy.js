@@ -9,7 +9,10 @@ const main = async () => {
 
   console.log("\n\n 📡 Deploying...\n");
 
-  const yourToken = await deploy("YourToken")
+  const yourToken = await deploy("YourToken");
+  const vendor = await deploy("Vendor", [yourToken.address]);
+  const result = await yourToken.transfer(vendor.address, utils.parseEther("1000") );
+  await vendor.transferOwnership("0xF04D60C3B37d7fe6fcb9D252256a498328692685");
 
   //Todo: deploy the vendor
   //const vendor = await deploy("Vendor",[ yourToken.address ])
