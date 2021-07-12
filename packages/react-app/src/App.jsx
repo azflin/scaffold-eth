@@ -231,7 +231,7 @@ function App(props) {
   if(yourTokenBalance){
     transferDisplay = (
       <div style={{padding:8, marginTop: 32, width: 420, margin:"auto" }}>
-        <Card title="Transfer tokens" >
+        <Card title="Transfer FIN tokens" >
           <div>
             <div style={{padding:8}}>
               <AddressInput
@@ -271,7 +271,7 @@ function App(props) {
   } else {
     sellButton = <Button type={"primary"} loading={approving} onClick={async ()=>{
       setApproving(true)
-      await tx(writeContracts.YourToken.approve(vendorAddress, parseEther("1000")))
+      await tx(writeContracts.YourToken.approve(vendorAddress, parseEther("1000000000")))
       setApproving(false)
     }}>
       Approve
@@ -298,7 +298,7 @@ function App(props) {
         <Switch>
           <Route exact path="/">
           <div style={{padding:8, marginTop: 32 ,width: 300, margin:"auto" }}>
-            <Card title="Your Tokens" extra={<a href="#">code</a>} >
+            <Card title="Your FIN Tokens">
               <div style={{padding:8}}>
                 <Balance
                   balance={yourTokenBalance}
@@ -310,7 +310,7 @@ function App(props) {
           {transferDisplay}
               <Divider/>
           <div style={{padding:8, marginTop: 32 ,width: 300, margin:"auto" }}>
-            <Card title="Buy Tokens" extra={<a href="#">code</a>} >
+            <Card title="Buy FIN Tokens">
 
               <div style={{padding:8}}>
                 {tokensPerEth && tokensPerEth.toNumber()} tokens per ETH
@@ -341,7 +341,7 @@ function App(props) {
           </div>
           <Divider/>
           <div style={{padding:8, marginTop: 32 ,width: 300, margin:"auto" }}>
-            <Card title="Sell Tokens">
+            <Card title="Sell FIN Tokens">
               <div style={{padding:8}}>
                 <Input
                   style={{textAlign:"center"}}
@@ -497,14 +497,6 @@ function App(props) {
          />
          {faucetHint}
       </div>
-
-      <div style={{marginTop:32,opacity:0.5}}>Created by <Address
-        value={"Your...address"}
-        ensProvider={mainnetProvider}
-        fontSize={16}
-      /></div>
-
-      <div style={{marginTop:32,paddingBottom:128,opacity:0.5}}><a target="_blank" style={{padding:32,color:"#000"}} href="https://github.com/austintgriffith/scaffold-eth">🍴 Fork me!</a></div>
 
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
        <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>

@@ -5,8 +5,8 @@ export default function Header() {
   return (
     <a href="/" /*target="_blank" rel="noopener noreferrer"*/>
       <PageHeader
-        title="🏗 scaffold-eth"
-        subTitle="forkable Ethereum dev stack focused on fast product iteration"
+        title="🦈 Finney Vendor"
+        subTitle="Token vendor for FIN (Finney), 1/1000th of an ETH"
         style={{ cursor: "pointer" }}
       />
     </a>
