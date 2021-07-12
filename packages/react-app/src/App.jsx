@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import {  JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import "./App.css";
-import { Row, Col, Card, Button, Menu, Alert, List, Input, Divider } from "antd";
+import { Row, Col, Card, Button, Menu, Alert, List, Input, Divider, Typography } from "antd";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useUserAddress } from "eth-hooks";
@@ -55,6 +55,7 @@ const localProvider = new JsonRpcProvider(localProviderUrlFromEnv);
 
 // 🔭 block explorer URL
 const blockExplorer = targetNetwork.blockExplorer;
+const { Text } = Typography;
 
 
 function App(props) {
@@ -282,6 +283,12 @@ function App(props) {
     <div className="App">
       <Header />
       {networkDisplay}
+      <div>
+        <h1>Buy and sell FIN from the Finney token vendor. 1 FIN = 1/1000 ETH!</h1>
+        <Text copyable={readContracts && readContracts.YourToken.address}>
+          Contract Address: {readContracts && readContracts.YourToken.address}
+        </Text>
+      </div>
       <Row>
         <Col span={12}>
           {/* Your Fin Tokens */}
