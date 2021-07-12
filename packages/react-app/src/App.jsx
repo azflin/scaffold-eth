@@ -211,6 +211,8 @@ function App(props) {
 
   const buyTokensEvents = useEventListener(readContracts, "Vendor", "BuyTokens", localProvider, 1);
   console.log("📟 buyTokensEvents:",buyTokensEvents)
+  const sellTokensEvents = useEventListener(readContracts, "Vendor", "SellTokens", localProvider, 1);
+  console.log("📟 sellTokensEvents:",sellTokensEvents)
 
   const [ tokenBuyAmount, setTokenBuyAmount ] = useState()
   const [ tokenSellAmount, setTokenSellAmount ] = useState()
@@ -386,6 +388,33 @@ function App(props) {
                         balance={item[1]}
 
                       />ETH to get
+
+                      <Balance
+                        balance={item[2]}
+
+                      />Tokens
+                  </List.Item>
+                )
+              }}
+            />
+          </div>
+
+          <div style={{width:500, margin:"auto",marginTop:64}}>
+            <div>Sell Token Events:</div>
+            <List
+              dataSource={sellTokensEvents}
+              renderItem={(item) => {
+                return (
+                  <List.Item key={item[0]+item[1]+item.blockNumber}>
+                    <Address
+                        value={item[0]}
+                        ensProvider={mainnetProvider}
+                        fontSize={16}
+                      /> received
+                      <Balance
+                        balance={item[1]}
+
+                      />ETH for selling
 
                       <Balance
                         balance={item[2]}
