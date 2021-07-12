@@ -55,6 +55,31 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountOfEth",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountOfTokens",
+        "type": "uint256"
+      }
+    ],
+    "name": "SellTokens",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "buyTokens",
     "outputs": [],
