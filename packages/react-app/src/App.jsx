@@ -280,35 +280,22 @@ function App(props) {
 
   return (
     <div className="App">
-
-      {/* ✏️ Edit the header and change the title to your project name */}
       <Header />
       {networkDisplay}
-      <BrowserRouter>
-
-        <Menu style={{ textAlign:"center" }} selectedKeys={[route]} mode="horizontal">
-          <Menu.Item key="/">
-            <Link onClick={()=>{setRoute("/")}} to="/">YourToken</Link>
-          </Menu.Item>
-          <Menu.Item key="/contracts">
-            <Link onClick={()=>{setRoute("/contracts")}} to="/contracts">Debug Contracts</Link>
-          </Menu.Item>
-        </Menu>
-
-        <Switch>
-          <Route exact path="/">
+      <Row>
+        <Col span={12}>
+          {/* Your Fin Tokens */}
           <div style={{padding:8, marginTop: 32 ,width: 300, margin:"auto" }}>
-            <Card title="Your FIN Tokens">
-              <div style={{padding:8}}>
-                <Balance
-                  balance={yourTokenBalance}
-                  fontSize={64}
-                />
-              </div>
-            </Card>
-          </div>
-          {transferDisplay}
-              <Divider/>
+              <Card title="Your FIN Tokens">
+                <div style={{padding:8}}>
+                  <Balance
+                    balance={yourTokenBalance}
+                    fontSize={64}
+                  />
+                </div>
+              </Card>
+            </div>
+          {/* Buy Fin Tokens */}
           <div style={{padding:8, marginTop: 32 ,width: 300, margin:"auto" }}>
             <Card title="Buy FIN Tokens">
 
@@ -328,7 +315,6 @@ function App(props) {
                   dollarMultiplier={price}
                 />
               </div>
-
               <div style={{padding:8}}>
                 <Button type={"primary"} loading={buying} onClick={async ()=>{
                   setBuying(true)
@@ -339,7 +325,7 @@ function App(props) {
 
             </Card>
           </div>
-          <Divider/>
+          {/* Sell Fin Tokens */}
           <div style={{padding:8, marginTop: 32 ,width: 300, margin:"auto" }}>
             <Card title="Sell FIN Tokens">
               <div style={{padding:8}}>
@@ -354,7 +340,11 @@ function App(props) {
                 {sellButton}
               </div>
             </Card>
-          </div>
+          </div>          
+          {transferDisplay}
+        </Col>
+        <Col span={12}>
+          {/* Vendor Token Balance */}
           <div style={{padding:8, marginTop: 32}}>
             <div>Vendor Token Balance:</div>
             <Balance
@@ -362,8 +352,7 @@ function App(props) {
               fontSize={64}
             />
           </div>
-
-
+          {/* Vendor ETH Balance */}
           <div style={{padding:8}}>
             <div>Vendor ETH Balance:</div>
             <Balance
@@ -371,7 +360,7 @@ function App(props) {
               fontSize={64}
             /> ETH
           </div>
-
+          {/* Buy Token Events */}
           <div style={{width:500, margin:"auto",marginTop:64}}>
             <div>Buy Token Events:</div>
             <List
@@ -398,7 +387,7 @@ function App(props) {
               }}
             />
           </div>
-
+          {/* Sell Token Events */}
           <div style={{width:500, margin:"auto",marginTop:64}}>
             <div>Sell Token Events:</div>
             <List
@@ -425,121 +414,38 @@ function App(props) {
               }}
             />
           </div>
-
-
-            {/*
-
-
-
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-
-
-
-*/}
-
-
-
-            { /* uncomment for a second contract:
-            <Contract
-              name="SecondContract"
-              signer={userProvider.getSigner()}
-              provider={localProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-            />
-            */ }
-
-            { /* Uncomment to display and interact with an external contract (DAI on mainnet):
-            <Contract
-              name="DAI"
-              customContract={mainnetDAIContract}
-              signer={userProvider.getSigner()}
-              provider={mainnetProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-            />
-            */ }
-          </Route>
-          <Route path="/contracts">
-            <Contract
-              name="Vendor"
-              signer={userProvider.getSigner()}
-              provider={localProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-            />
-            <Contract
-              name="YourToken"
-              signer={userProvider.getSigner()}
-              provider={localProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-            />
-          </Route>
-        </Switch>
-      </BrowserRouter>
-
-
+        </Col>
+      </Row>
       {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
       <div style={{ position: "fixed", textAlign: "right", right: 0, top: 0, padding: 10 }}>
-         <Account
-           address={address}
-           localProvider={localProvider}
-           userProvider={userProvider}
-           mainnetProvider={mainnetProvider}
-           price={price}
-           web3Modal={web3Modal}
-           loadWeb3Modal={loadWeb3Modal}
-           logoutOfWeb3Modal={logoutOfWeb3Modal}
-           blockExplorer={blockExplorer}
-         />
-         {faucetHint}
-      </div>
-
+          <Account
+            address={address}
+            localProvider={localProvider}
+            userProvider={userProvider}
+            mainnetProvider={mainnetProvider}
+            price={price}
+            web3Modal={web3Modal}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+            blockExplorer={blockExplorer}
+          />
+          {faucetHint}
+        </div>
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-       <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
-         <Row align="middle" gutter={[4, 4]}>
-           <Col span={8}>
-             <Ramp price={price} address={address} networks={NETWORKS}/>
-           </Col>
+      <Row align="middle" gutter={[4, 4]}>
+          <Col span={8}>
+            {
 
-           <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
-             <GasGauge gasPrice={gasPrice} />
-           </Col>
-           <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
-             <Button
-               onClick={() => {
-                 window.open("https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA");
-               }}
-               size="large"
-               shape="round"
-             >
-               <span style={{ marginRight: 8 }} role="img" aria-label="support">
-                 💬
-               </span>
-               Support
-             </Button>
-           </Col>
-         </Row>
-
-         <Row align="middle" gutter={[4, 4]}>
-           <Col span={24}>
-             {
-
-               /*  if the local provider has a signer, let's show the faucet:  */
-               localProvider && localProvider.connection && localProvider.connection.url && localProvider.connection.url.indexOf(window.location.hostname)>=0 && !process.env.REACT_APP_PROVIDER && price > 1 ? (
-                 <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider}/>
-               ) : (
-                 ""
-               )
-             }
-           </Col>
-         </Row>
-       </div>
-
-    </div>
+              /*  if the local provider has a signer, let's show the faucet:  */
+              localProvider && localProvider.connection && localProvider.connection.url && localProvider.connection.url.indexOf(window.location.hostname)>=0 && !process.env.REACT_APP_PROVIDER && price > 1 ? (
+                <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider}/>
+              ) : (
+                ""
+              )
+            }
+          </Col>
+        </Row>
+      </div>
   );
 }
 

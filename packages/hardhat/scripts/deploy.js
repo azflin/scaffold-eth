@@ -11,8 +11,8 @@ const main = async () => {
 
   const yourToken = await deploy("YourToken");
   const vendor = await deploy("Vendor", [yourToken.address]);
-  const result = await yourToken.transfer(vendor.address, utils.parseEther("1000") );
-  await vendor.transferOwnership("0xF04D60C3B37d7fe6fcb9D252256a498328692685");
+  const result = await yourToken.transfer(vendor.address, utils.parseEther("88888888") );
+  await vendor.transferOwnership("0x785Ba9bA76F9C2f1c07AEb27C64683Dfa9281cF3");
 
   //Todo: deploy the vendor
   //const vendor = await deploy("Vendor",[ yourToken.address ])
