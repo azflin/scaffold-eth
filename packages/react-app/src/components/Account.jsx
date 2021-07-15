@@ -48,7 +48,7 @@ export default function Account({
     ""
   ) : (
     <span>
-      {address ? <Address value={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} /> : "Connecting..."}
+      {address ? <Address value={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} /> : ""}
     </span>
   );
 

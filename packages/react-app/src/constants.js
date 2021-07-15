@@ -24,6 +24,7 @@ export const NETWORKS = {
         chainId: 31337,
         blockExplorer: '',
         rpcUrl: "http://" + window.location.hostname + ":8545",
+        price: 2000,
     },
     mainnet: {
         name: "mainnet",

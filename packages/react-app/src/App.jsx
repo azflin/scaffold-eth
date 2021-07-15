@@ -32,9 +32,10 @@ const humanizeDuration = require("humanize-duration");
     You can also bring in contract artifacts in `constants.js`
     (and then use the `useExternalContractLoader()` hook!)
 */
+const NETWORK_TO_DEPLOY = 'localhost';
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS['localhost']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS[NETWORK_TO_DEPLOY]; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = false;
@@ -43,15 +44,15 @@ const DEBUG = false;
 if(DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
 // const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 // const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
-const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
+// const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID)
 
 // 🏠 Your local provider is usually pointed at your local blockchain
-const localProviderUrl = targetNetwork.rpcUrl;
+// const localProviderUrl = targetNetwork.rpcUrl;
 // as you deploy to other networks you can set REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
-const localProviderUrlFromEnv = process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : localProviderUrl;
-if(DEBUG) console.log("🏠 Connecting to provider:", localProviderUrlFromEnv);
-const localProvider = new JsonRpcProvider(localProviderUrlFromEnv);
+// const localProviderUrlFromEnv = process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : localProviderUrl;
+// if(DEBUG) console.log("🏠 Connecting to provider:", localProviderUrlFromEnv);
+const localProvider = new JsonRpcProvider(targetNetwork.rpcUrl);
 
 // 🔭 block explorer URL
 const blockExplorer = targetNetwork.blockExplorer;
@@ -61,44 +62,44 @@ const { Text } = Typography;
 function App(props) {
   const [injectedProvider, setInjectedProvider] = useState();
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
-  const price = useExchangePrice(targetNetwork,mainnetProvider);
+  const price = useExchangePrice(targetNetwork,localProvider);
 
   /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
   const gasPrice = useGasPrice(targetNetwork,"fast");
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
-  const userProvider = useUserProvider(injectedProvider, localProvider);
-  const address = useUserAddress(userProvider);
+  // const userProvider = useUserProvider(injectedProvider, localProvider);
+  const address = useUserAddress(injectedProvider);
   if(DEBUG) console.log("👩‍💼 selected address:",address)
 
   // You can warn the user if you would like them to be on a specific network
   let localChainId = localProvider && localProvider._network && localProvider._network.chainId
   if(DEBUG) console.log("🏠 localChainId",localChainId)
 
-  let selectedChainId = userProvider && userProvider._network && userProvider._network.chainId
+  let selectedChainId = injectedProvider && injectedProvider._network && injectedProvider._network.chainId
   if(DEBUG) console.log("🕵🏻‍♂️ selectedChainId:",selectedChainId)
 
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
 
   // The transactor wraps transactions and provides notificiations
-  const tx = Transactor(userProvider, gasPrice)
+  const tx = Transactor(injectedProvider, gasPrice)
 
   // Faucet Tx can be used to send funds from the faucet
   const faucetTx = Transactor(localProvider, gasPrice)
 
   // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
-  const yourLocalBalance = useBalance(localProvider, address);
+  const yourLocalBalance = useBalance(injectedProvider, address);
   if(DEBUG) console.log("💵 yourLocalBalance",yourLocalBalance?formatEther(yourLocalBalance):"...")
 
   // Just plug in different 🛰 providers to get your balance on different chains:
-  const yourMainnetBalance = useBalance(mainnetProvider, address);
-  if(DEBUG) console.log("💵 yourMainnetBalance",yourMainnetBalance?formatEther(yourMainnetBalance):"...")
+  const yourMainnetBalance = useBalance(localProvider, address);
+  if(DEBUG) console.log("💵 yourLocalProviderBalance",yourMainnetBalance?formatEther(yourMainnetBalance):"...")
 
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider)
   if(DEBUG) console.log("📝 readContracts",readContracts)
 
   // If you want to make 🔐 write transactions to your contracts, use the userProvider:
-  const writeContracts = useContractLoader(userProvider)
+  const writeContracts = useContractLoader(injectedProvider)
   if(DEBUG) console.log("🔐 writeContracts",writeContracts)
 
   // EXTERNAL CONTRACT EXAMPLE:
@@ -236,7 +237,7 @@ function App(props) {
           <div>
             <div style={{padding:8}}>
               <AddressInput
-                ensProvider={mainnetProvider}
+                ensProvider={localProvider}
                 placeholder="to address"
                 value={tokenSendToAddress}
                 onChange={setTokenSendToAddress}
@@ -377,7 +378,7 @@ function App(props) {
                   <List.Item key={item[0]+item[1]+item.blockNumber}>
                     <Address
                         value={item[0]}
-                        ensProvider={mainnetProvider}
+                        ensProvider={localProvider}
                         fontSize={16}
                       /> paid
                       <Balance
@@ -404,7 +405,7 @@ function App(props) {
                   <List.Item key={item[0]+item[1]+item.blockNumber}>
                     <Address
                         value={item[0]}
-                        ensProvider={mainnetProvider}
+                        ensProvider={localProvider}
                         fontSize={16}
                       /> received
                       <Balance
@@ -428,8 +429,8 @@ function App(props) {
           <Account
             address={address}
             localProvider={localProvider}
-            userProvider={userProvider}
-            mainnetProvider={mainnetProvider}
+            userProvider={injectedProvider}
+            mainnetProvider={localProvider}
             price={price}
             web3Modal={web3Modal}
             loadWeb3Modal={loadWeb3Modal}
@@ -445,7 +446,7 @@ function App(props) {
 
               /*  if the local provider has a signer, let's show the faucet:  */
               localProvider && localProvider.connection && localProvider.connection.url && localProvider.connection.url.indexOf(window.location.hostname)>=0 && !process.env.REACT_APP_PROVIDER && price > 1 ? (
-                <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider}/>
+                <Faucet localProvider={localProvider} price={price} ensProvider={localProvider}/>
               ) : (
                 ""
               )
