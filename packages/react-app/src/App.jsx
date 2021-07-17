@@ -291,10 +291,12 @@ function App(props) {
       {networkDisplay}
       <div>
         <h1>Buy and sell FIN from the Finney token vendor. 1 FIN = 1/1000 ETH!</h1>
+        Contract Address:&nbsp;
         <Text copyable={readContracts && readContracts.YourToken.address}>
-          Contract Address: {readContracts && readContracts.YourToken.address}
+          {readContracts && readContracts.YourToken.address}
         </Text>
       </div>
+      {injectedProvider ? 
       <Row>
         <Col span={12}>
           {/* Your Fin Tokens */}
@@ -429,6 +431,7 @@ function App(props) {
           </div>
         </Col>
       </Row>
+      : <span><br></br><Alert style={{ display: "inline" }} message="Please connect through MetaMask (or other wallet)." type="warning" showIcon /></span> }
       {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
       <div style={{ position: "fixed", textAlign: "right", right: 0, top: 0, padding: 10 }}>
           <Account
@@ -442,14 +445,12 @@ function App(props) {
             logoutOfWeb3Modal={logoutOfWeb3Modal}
             blockExplorer={blockExplorer}
           />
-          {faucetHint}
+          {/* {faucetHint} */}
         </div>
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-      <Row align="middle" gutter={[4, 4]}>
+      {/* <Row align="middle" gutter={[4, 4]}>
           <Col span={8}>
             {
-
-              /*  if the local provider has a signer, let's show the faucet:  */
               localProvider && localProvider.connection && localProvider.connection.url && localProvider.connection.url.indexOf(window.location.hostname)>=0 && !process.env.REACT_APP_PROVIDER && price > 1 ? (
                 <Faucet localProvider={localProvider} price={price} ensProvider={localProvider}/>
               ) : (
@@ -457,7 +458,7 @@ function App(props) {
               )
             }
           </Col>
-        </Row>
+        </Row> */}
       </div>
   );
 }
