@@ -1,18 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import {  JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import "./App.css";
-import { Row, Col, Card, Button, Menu, Alert, List, Input, Divider, Typography } from "antd";
+import { Row, Col, Card, Button, Alert, List, Input, Typography } from "antd";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useUserAddress } from "eth-hooks";
-import { useExchangePrice, useGasPrice, useUserProvider, useContractLoader, useContractReader, useEventListener, useBalance, useExternalContractLoader } from "./hooks";
-import { Header, Account, Faucet, Ramp, Contract, GasGauge, Balance, Address, EtherInput, AddressInput } from "./components";
+import { useExchangePrice, useGasPrice, useContractLoader, useContractReader, useEventListener, useBalance } from "./hooks";
+import { Header, Account, Balance, Address, AddressInput } from "./components";
 import { Transactor } from "./helpers";
 import { formatEther, parseEther } from "@ethersproject/units";
-import { Hints, ExampleUI, Subgraph } from "./views"
-import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS } from "./constants";
+import { INFURA_ID, NETWORK, NETWORKS } from "./constants";
 const humanizeDuration = require("humanize-duration");
 /*
     Welcome to 🏗 scaffold-eth !
@@ -32,7 +30,7 @@ const humanizeDuration = require("humanize-duration");
     You can also bring in contract artifacts in `constants.js`
     (and then use the `useExternalContractLoader()` hook!)
 */
-const NETWORK_TO_DEPLOY = 'localhost';
+const NETWORK_TO_DEPLOY = 'ropsten';
 
 /// 📡 What chain are your contracts deployed to?
 const targetNetwork = NETWORKS[NETWORK_TO_DEPLOY]; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
