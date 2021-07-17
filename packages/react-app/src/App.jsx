@@ -179,7 +179,12 @@ function App(props) {
 
   const loadWeb3Modal = useCallback(async () => {
     const provider = await web3Modal.connect();
-    setInjectedProvider(new Web3Provider(provider));
+    let web3provider = new Web3Provider(provider);
+    setInjectedProvider(web3provider);
+    provider.on("accountsChanged", accounts => {
+      web3provider = new Web3Provider(provider);
+      setInjectedProvider(web3provider);
+    });
   }, [setInjectedProvider]);
 
   useEffect(() => {
