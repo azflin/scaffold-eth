@@ -39,11 +39,6 @@ const targetNetwork = NETWORKS[NETWORK_TO_DEPLOY]; // <------- select your targe
 const DEBUG = false;
 
 // 🛰 providers
-if(DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
-// const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
-// const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
-// const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
-// ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID)
 
 // 🏠 Your local provider is usually pointed at your local blockchain
 // const localProviderUrl = targetNetwork.rpcUrl;
@@ -59,13 +54,12 @@ const { Text } = Typography;
 
 function App(props) {
   const [injectedProvider, setInjectedProvider] = useState();
-  /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
-  const price = useExchangePrice(targetNetwork,localProvider);
+    /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
+    const price = useExchangePrice(targetNetwork,localProvider);
 
-  /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
-  const gasPrice = useGasPrice(targetNetwork,"fast");
-  // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
-  // const userProvider = useUserProvider(injectedProvider, localProvider);
+    /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
+    const gasPrice = useGasPrice(targetNetwork,"fast");
+  // Use your injected provider from 🦊 Metamask
   const address = useUserAddress(injectedProvider);
   if(DEBUG) console.log("👩‍💼 selected address:",address)
 
@@ -128,29 +122,6 @@ function App(props) {
   const allowance = useContractReader(readContracts, "YourToken", "allowance", [address, vendorAddress])
   console.log("🏵 yourAllowance:", allowance ? formatEther(allowance) : '...')
 
-  // const complete = useContractReader(readContracts,"ExampleExternalContract", "completed")
-  // console.log("✅ complete:",complete)
-  //
-  // const exampleExternalContractBalance = useBalance(localProvider, readContracts && readContracts.ExampleExternalContract.address);
-  // if(DEBUG) console.log("💵 exampleExternalContractBalance", exampleExternalContractBalance )
-
-  // let completeDisplay = ""
-  // if(false){
-  //   completeDisplay = (
-  //     <div style={{padding:64, backgroundColor:"#eeffef", fontWeight:"bolder"}}>
-  //       🚀 🎖 👩‍🚀  -  Staking App triggered `ExampleExternalContract` -- 🎉  🍾   🎊
-  //       <Balance
-  //         balance={0}
-  //         fontSize={64}
-  //       /> ETH staked!
-  //     </div>
-  //   )
-  // }
-
-  /*
-  const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
-  console.log("🏷 Resolved austingriffith.eth as:",addressFromENS)
-  */
   let networkDisplay = ""
   if(localChainId && selectedChainId && localChainId != selectedChainId ){
     networkDisplay = (
@@ -195,24 +166,6 @@ function App(props) {
   useEffect(() => {
     setRoute(window.location.pathname)
   }, [setRoute]);
-
-  let faucetHint = ""
-  const [ faucetClicked, setFaucetClicked ] = useState( false );
-    if(!faucetClicked&&localProvider&&localProvider._network&&localProvider._network.chainId==31337&&yourLocalBalance&&formatEther(yourLocalBalance)<=0){
-    faucetHint = (
-      <div style={{padding:16}}>
-        <Button type={"primary"} onClick={()=>{
-          faucetTx({
-            to: address,
-            value: parseEther("1"),
-          });
-          setFaucetClicked(true)
-        }}>
-          💰 Grab funds from the faucet ⛽️
-        </Button>
-      </div>
-    )
-  }
 
   const buyTokensEvents = useEventListener(readContracts, "Vendor", "BuyTokens", localProvider, 1);
   console.log("📟 buyTokensEvents:",buyTokensEvents)
@@ -289,7 +242,7 @@ function App(props) {
       {networkDisplay}
       <div>
         <h1>Buy and sell FIN from the Finney token vendor. 1 FIN = 1/1000 ETH!</h1>
-        Contract Address:&nbsp;
+        Token Contract Address:&nbsp;
         <Text copyable={readContracts && readContracts.YourToken.address}>
           {readContracts && readContracts.YourToken.address}
         </Text>
@@ -443,20 +396,7 @@ function App(props) {
             logoutOfWeb3Modal={logoutOfWeb3Modal}
             blockExplorer={blockExplorer}
           />
-          {/* {faucetHint} */}
         </div>
-      {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-      {/* <Row align="middle" gutter={[4, 4]}>
-          <Col span={8}>
-            {
-              localProvider && localProvider.connection && localProvider.connection.url && localProvider.connection.url.indexOf(window.location.hostname)>=0 && !process.env.REACT_APP_PROVIDER && price > 1 ? (
-                <Faucet localProvider={localProvider} price={price} ensProvider={localProvider}/>
-              ) : (
-                ""
-              )
-            }
-          </Col>
-        </Row> */}
       </div>
   );
 }
